@@ -3,10 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import UserSignupPage from './pages/UserSignupPage';
+import LoginPage from './pages/LoginPage';
 import * as serviceWorker from './serviceWorker';
 import './bootstrap-override.scss';
+import LanguageSelector from './components/LanguageSelector';
+import './i18n';
 
-ReactDOM.render(<UserSignupPage />, document.getElementById('root'));
+ReactDOM.render(<><LoginPage /><LanguageSelector /></>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
