@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useReducer } from 'react';
 import UserSignupPage from '../pages/UserSignupPage';
 import LoginPage from '../pages/LoginPage';
 import LanguageSelector from '../components/LanguageSelector';
@@ -31,13 +31,13 @@ class App extends Component {
           <TopBar username={username} isLoggedIn={isLoggedIn} onLogout={this.onLogout} />
           <Switch>
             <Route exact path="/" component={HomePage} />
+            <Route path="/user/:username" component={(props) => <UserPage username={username} {...props} />} />
             {!isLoggedIn &&
               <>
                 <Route path="/login" component={(reactRouterProps) => <LoginPage onLoginSuccess={this.onLoginSuccess} {...reactRouterProps} />} />
                 <Route path="/signup" component={UserSignupPage} />
               </>
             }
-            <Route path="/user/:username" component={UserPage} />
             <Redirect to="/" />
           </Switch>
         </Router>
