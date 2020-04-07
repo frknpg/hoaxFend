@@ -16,9 +16,11 @@ class LoginPage extends Component {
     e.preventDefault();
     const { username, password } = this.state;
 
+    const { push } = this.props.history;
     this.setState({ error: null });
     try {
       await login({ username, password });
+      push('/');
     } catch (err) {
       this.setState({ error: err.response.data.message })
     }
