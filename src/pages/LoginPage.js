@@ -14,12 +14,14 @@ class LoginPage extends Component {
 
   onClickLogin = async (e) => {
     e.preventDefault();
+    const { onLoginSuccess } = this.props;
     const { username, password } = this.state;
 
     const { push } = this.props.history;
     this.setState({ error: null });
     try {
       await login({ username, password });
+      onLoginSuccess(username);
       push('/');
     } catch (err) {
       this.setState({ error: err.response.data.message })
