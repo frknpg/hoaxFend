@@ -9,23 +9,7 @@ class LoginPage extends Component {
   state = {
     username: null,
     password: null,
-    pendingApiCall: false,
     error: null
-  }
-
-  componentDidMount = () => {
-    axios.interceptors.request.use((request) => {
-      this.setState({ pendingApiCall: true });
-      return request;
-    });
-
-    axios.interceptors.response.use((response) => {
-      this.setState({ pendingApiCall: false });
-      return response;
-    }, (error) => {
-      this.setState({ pendingApiCall: false });
-      throw error;
-    });
   }
 
   onClickLogin = async (e) => {
@@ -49,8 +33,8 @@ class LoginPage extends Component {
   }
 
   render() {
-    const { t } = this.props;
-    const { pendingApiCall, username, password, error } = this.state;
+    const { t, pendingApiCall } = this.props;
+    const { username, password, error } = this.state;
 
     const buttonEnabled = username && password;
 

@@ -10,7 +10,6 @@ class UserSignupPage extends Component {
     displayName: null,
     password: null,
     passwordRepeat: null,
-    pendingApiCall: false,
     errors: {}
   }
 
@@ -18,16 +17,13 @@ class UserSignupPage extends Component {
     e.preventDefault();
     const { username, displayName, password } = this.state;
 
-    this.setState({ pendingApiCall: true });
-
     try {
-      const response = await signUp({ username, displayName, password });
+      await signUp({ username, displayName, password });
     } catch (err) {
       if (err.response.data.validationErrors) {
         this.setState({ errors: err.response.data.validationErrors })
       }
     }
-    this.setState({ pendingApiCall: false });
   }
 
   handleChange = (e) => {
@@ -53,8 +49,8 @@ class UserSignupPage extends Component {
   }
 
   render() {
-    const { t } = this.props;
-    const { pendingApiCall, errors } = this.state;
+    const { t, pendingApiCall } = this.props;
+    const { errors } = this.state;
     const { username, displayName, password, passwordRepeat } = errors;
 
     return (
