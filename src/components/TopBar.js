@@ -3,18 +3,18 @@ import { Link } from 'react-router-dom';
 import { withTranslation } from 'react-i18next';
 // import { Authentication } from '../shared/AuthenticationContext';
 import { connect } from 'react-redux';
+import { onLogout } from '../redux/authActions';
 
 class TopBar extends Component {
 
   // static contextType = Authentication;
 
   onClickLogout = () => {
-    const action = { type: 'LOGOUT_SUCCESS' };
-    this.props.dispatch(action);
+    this.props.dispatch(onLogout());
   }
 
   render() {
-    const { t, username, isLoggedIn } = this.props;
+    const { t, username, isLoggedIn, onLogout } = this.props;
     // const { state, onLogout } = this.context;
     // const { isLoggedIn, username } = state;
 
@@ -39,7 +39,7 @@ class TopBar extends Component {
           <Link className="nav-link" to={`/user/${username}`} >
             {username}
           </Link>
-          <li className="nav-link" onClick={this.onClickLogout} style={{ cursor: 'pointer' }} >
+          <li className="nav-link" onClick={onLogout} style={{ cursor: 'pointer' }} >
             {t('Logout')}
           </li>
         </ul>
@@ -63,6 +63,10 @@ class TopBar extends Component {
 const mapStateToProps = (store) => ({
   isLoggedIn: store.isLoggedIn,
   username: store.username
-})
+});
 
-export default connect(mapStateToProps)(withTranslation()(TopBar));
+const mapDispatchToProps = (dispatch) => ({
+  onLogout: () => dispatch(onLogout())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(TopBar));
