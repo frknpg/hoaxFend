@@ -1,10 +1,21 @@
 import * as actions from './const';
+import { login } from '../api/apiCalls';
 
 export const onLogout = () => ({
 	type: actions.LOGOUT_SUCCESS
 });
 
-export const onloginSuccess = (authState) => ({
+export const onLoginSuccess = (authState) => ({
 	type: actions.LOGIN_SUCCESS,
 	authState
 });
+
+export const loginHandler = (credentials) => {
+	return async function (dispatch) {
+		const response = await login(credentials);
+
+		const authState = { ...response.data, password: credentials.password };
+		dispatch(onLoginSuccess(authState));
+		return response;
+	}
+};
