@@ -1,5 +1,5 @@
 import * as actions from './const';
-import { login } from '../api/apiCalls';
+import { login, signUp } from '../api/apiCalls';
 
 export const onLogout = () => ({
 	type: actions.LOGOUT_SUCCESS
@@ -16,6 +16,15 @@ export const loginHandler = (credentials) => {
 
 		const authState = { ...response.data, password: credentials.password };
 		dispatch(onLoginSuccess(authState));
+		return response;
+	}
+};
+
+export const signupHandler = (user) => {
+	return async function(dispatch) {
+		const response = await signUp(user);
+
+		await dispatch(loginHandler(user));
 		return response;
 	}
 };
