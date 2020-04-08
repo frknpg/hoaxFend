@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import Input from '../components/Input';
 import ButtonWithProgress from '../components/ButtonWithProgress';
 import { useTranslation } from 'react-i18next';
-import { withApiProgress } from '../shared/ApiProgress';
 import { useDispatch } from 'react-redux';
 import { signupHandler } from '../redux/authActions';
+import { useApiProgress } from '../shared/ApiProgressHook';
 
 const UserSignupPage = (props) => {
 
@@ -16,19 +16,19 @@ const UserSignupPage = (props) => {
   });
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
-  
+
   const onChange = e => {
     const { name, value } = e.target;
-    
+
     setErrors(prevErrors => ({ ...prevErrors, [name]: null }));
     setForm(prevForm => ({ ...prevForm, [name]: value }));
   };
-  
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     const { history } = props;
     const { push } = history;
-    
+
     try {
       await dispatch(signupHandler(form));
       push('/');
@@ -38,17 +38,20 @@ const UserSignupPage = (props) => {
       }
     }
   }
-  
-  const { pendingApiCall } = props;
+
   const { username: usernameError, displayName: displayNameError, password: passwordError } = errors;
-  
+
   const { t } = useTranslation();
-  
+
   let passwordRepeatError;
   if (form.password !== form.passwordRepeat) {
     passwordRepeatError = t('Password mismatch');
   }
-  
+
+  const pendingApiCallLogin = useApiProgress("/api/1.0/auth");
+  const pendingApiCallSignup = useApiProgress("/api/1.0/users");
+  const pendingApiCall = pendingApiCallLogin || pendingApiCallSignup;
+
   return (
     <div className="container">
       <form>
@@ -70,7 +73,4 @@ const UserSignupPage = (props) => {
   );
 }
 
-const UserSignupPageWithApiProgressForUsers = withApiProgress(UserSignupPage, '/api/1.0/users');
-const UserSignupPageWithApiProgressForLogin = withApiProgress(UserSignupPageWithApiProgressForUsers, '/api/1.0/auth');
-
-export default UserSignupPageWithApiProgressForLogin;
+export default UserSignupPage;
