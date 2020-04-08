@@ -6,14 +6,15 @@ import TopBar from '../components/TopBar';
 import HomePage from '../pages/HomePage';
 import UserPage from '../pages/UserPage';
 import { HashRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import { Authentication } from '../shared/AuthenticationContext';
+// import { Authentication } from '../shared/AuthenticationContext';
 
 class App extends Component {
 
-  static contextType = Authentication;
+  // static contextType = Authentication;
 
   render() {
-    const { isLoggedIn } = this.context.state;
+    // const { isLoggedIn } = this.context.state;
+    const isLoggedIn = false;
 
     return (
       <div>
