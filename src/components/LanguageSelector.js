@@ -1,12 +1,13 @@
 // @flow 
 import * as React from 'react';
 import { changeLanguage } from '../api/apiCalls';
-import { withTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const LanguageSelector = (props) => {
+  const { i18n } = useTranslation();
 
   const onChangeLanguage = (lang) => {
-    props.i18n.changeLanguage(lang);
+    i18n.changeLanguage(lang);
     changeLanguage(lang);
   }
 
@@ -18,4 +19,4 @@ const LanguageSelector = (props) => {
   );
 };
 
-export default withTranslation()(LanguageSelector);
+export default LanguageSelector;
