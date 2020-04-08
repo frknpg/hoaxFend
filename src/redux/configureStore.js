@@ -1,8 +1,10 @@
 import { createStore } from 'redux';
 import authReducer from './authReducer';
+import SecureLS from 'secure-ls';
 
-const configureStore = () => {
+const secureLs = new SecureLS();
 
+const getStateFromStorage = () => {
   let defaultState = {
     isLoggedIn: false,
     username: undefined,
@@ -11,19 +13,26 @@ const configureStore = () => {
     password: undefined
   };
 
-  const hoaxAuth = localStorage.getItem('hoax-auth');
+  const hoaxAuth = secureLs.get('hoax-auth');
   if (hoaxAuth) {
-    try {
-      defaultState = JSON.parse(hoaxAuth);
-    } catch (err) { }
+    return hoaxAuth;
   }
 
-  const store = createStore(authReducer, defaultState,
+  return defaultState;
+};
+
+const updateStateInStorage = (newState) => {
+  secureLs.set('hoax-auth', newState);
+};
+
+const configureStore = () => {
+
+  const store = createStore(authReducer, getStateFromStorage(),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );
 
   store.subscribe(() => {
-    localStorage.setItem('hoax-auth', JSON.stringify(store.getState()));
+    updateStateInStorage(store.getState());
   });
 
   return store;
