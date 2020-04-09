@@ -24,3 +24,8 @@ export const signUp = (body) => {
 export const getUsers = (page = 0, size = 3) => {
   return axios.get('/api/1.0/users', { params: { page, size } });
 };
+
+export const getUser = (username) => {
+  return axios.get(`/api/1.0/users/${username}`);
+};
+
