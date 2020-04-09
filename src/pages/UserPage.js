@@ -11,7 +11,7 @@ const UserPage = () => {
 	const [user, setUser] = useState({});
 	const [notFound, setNotFound] = useState(false);
 	const { username } = useParams();
-	const pendingApiCall = useApiProgress('/api/1.0/users/' + username);
+	const pendingApiCall = useApiProgress('get' ,'/api/1.0/users/' + username);
 
 	useEffect(() => {
 		const getUserData = async (username) => {
@@ -46,7 +46,7 @@ const UserPage = () => {
 
 	return (
 		<div className="container">
-			<ProfileCard user={user} />
+			<ProfileCard user={user} updateUserOnPage={(user) => setUser(user)} />
 		</div>
 	);
 }

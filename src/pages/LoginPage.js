@@ -13,7 +13,7 @@ const LoginPage = (props) => {
   const [error, setError] = useState();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const pendingApiCall = useApiProgress('/api/1.0/auth');
+  const pendingApiCall = useApiProgress('post', '/api/1.0/auth');
 
   useEffect(() => {
     setError(null);

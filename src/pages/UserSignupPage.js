@@ -48,8 +48,8 @@ const UserSignupPage = (props) => {
     passwordRepeatError = t('Password mismatch');
   }
 
-  const pendingApiCallLogin = useApiProgress("/api/1.0/auth");
-  const pendingApiCallSignup = useApiProgress("/api/1.0/users");
+  const pendingApiCallLogin = useApiProgress('post' ,"/api/1.0/auth");
+  const pendingApiCallSignup = useApiProgress('post' ,"/api/1.0/users");
   const pendingApiCall = pendingApiCallLogin || pendingApiCallSignup;
 
   return (

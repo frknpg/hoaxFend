@@ -13,7 +13,7 @@ const UserList = (props) => {
 		number: 0
 	});
 	const [failure, setFailure] = useState(false);
-	const pendingApiCall = useApiProgress('/api/1.0/users');
+	const pendingApiCall = useApiProgress('get', '/api/1.0/users');
 
 	useEffect(() => {
 		getUserList();
