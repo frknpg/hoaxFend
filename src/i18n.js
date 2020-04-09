@@ -12,7 +12,10 @@ i18n.use(initReactI18next).init({
         Password: 'Password',
         'Password Repeat': 'Password Repeat',
         Login: 'Login',
-        Logout: 'Logout'
+        Logout: 'Logout',
+        Users: 'Users',
+        Next: 'Next >',
+        Prev: '< Previous'
       }
     },
     tr: {
@@ -24,7 +27,10 @@ i18n.use(initReactI18next).init({
         Password: 'Şifre',
         'Password Repeat': 'Şifreyi Tekrarla',
         'Login': 'Giriş Yap',
-        Logout: 'Çıkış Yap'
+        Logout: 'Çıkış Yap',
+        Users: 'Kullanıcılar',
+        Next: 'Sonraki >',
+        Prev: '< Önceki'
       }
     }
   },
