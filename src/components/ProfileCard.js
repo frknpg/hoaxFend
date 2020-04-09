@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import defaultPicture from '../assets/original.png';
+import ProfileImage from './ProfileImage';
 
 const ProfileCard = (props) => {
 
@@ -13,7 +13,7 @@ const ProfileCard = (props) => {
   return (
     <div className="card text-center">
       <div className="card-header">
-        <img className="rounded-circle shadow" width="200" height="200" src={image || defaultPicture} alt={`${username} profile`} />
+        <ProfileImage className="rounded-circle shadow" src={image} width="200px" height="200px" alt={`${username} profile`} />
       </div>
       <div className="card-body">
         <h3>{displayName}@{username}</h3>
