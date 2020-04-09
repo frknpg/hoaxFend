@@ -21,7 +21,7 @@ export const loginHandler = (credentials) => {
 };
 
 export const signupHandler = (user) => {
-	return async function(dispatch) {
+	return async function (dispatch) {
 		const response = await signUp(user);
 
 		await dispatch(loginHandler(user));

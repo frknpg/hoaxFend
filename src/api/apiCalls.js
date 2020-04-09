@@ -4,6 +4,15 @@ export const changeLanguage = lang => {
   axios.defaults.headers['accept-language'] = lang;
 };
 
+export const setAuthorizationHeader = ({ username, password, isLoggedIn }) => {
+  if (isLoggedIn) {
+    const authHeaderValue = `Basic ${btoa(username + ':' + password)}`;
+    axios.defaults.headers['Authorization'] = authHeaderValue;
+  } else {
+    delete axios.defaults.headers['Authorization'];
+  }
+};
+
 export const login = creds => {
   return axios.post('/api/1.0/auth', {}, { auth: creds });
 };
