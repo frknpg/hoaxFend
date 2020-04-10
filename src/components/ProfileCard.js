@@ -13,6 +13,7 @@ const ProfileCard = (props) => {
   const { username, displayName, image } = user;
   const [inEditMode, setInEditMode] = useState(false);
   const [updatedDisplayName, setUpdatedDisplayName] = useState();
+  const [newImage, setNewImage] = useState();
   const { loggedUsername } = useSelector(store => ({
     loggedUsername: store.username
   }));
@@ -20,14 +21,25 @@ const ProfileCard = (props) => {
 
   useEffect(() => {
     setUpdatedDisplayName(displayName);
+    setNewImage();
   }, [inEditMode, displayName])
 
   const onClickSave = async () => {
+    const imageBase64only = newImage.split(',')[1];
     try {
-      const response = await updateUser(username, { displayName: updatedDisplayName });
+      const response = await updateUser(username, { displayName: updatedDisplayName, image: imageBase64only });
       updateUserOnPage(response.data);
       setInEditMode(false);
     } catch (err) { }
+  }
+
+  const onChangeFile = (e) => {
+    const file = e.target.files[0];
+    const fileReader = new FileReader();
+    fileReader.onloadend = () => {
+      setNewImage(fileReader.result);
+    }
+    fileReader.readAsDataURL(file);
   }
 
   const { t } = useTranslation();
@@ -35,7 +47,10 @@ const ProfileCard = (props) => {
   return (
     <div className="card text-center">
       <div className="card-header">
-        <ProfileImage className="rounded-circle shadow" src={image} width="200px" height="200px" alt={`${username} profile`} />
+        <ProfileImage className="rounded-circle shadow" 
+        image={image} tempiamge={newImage}
+        width="200px" height="200px"
+         alt={`${username} profile`} />
       </div>
       <div className="card-body">
         {!inEditMode ?
@@ -50,6 +65,7 @@ const ProfileCard = (props) => {
           :
           <div>
             <Input label={t("Change Display Name")} defaultValue={displayName} onChange={(e) => setUpdatedDisplayName(e.target.value)} />
+            <input type="file" onChange={onChangeFile} />
             <div>
               <ButtonWithProgress className="btn btn-primary d-inline-flex" onClick={onClickSave}
                 disabled={pendingApiCall} pendingApiCall={pendingApiCall}
