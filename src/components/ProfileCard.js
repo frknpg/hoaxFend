@@ -25,9 +25,12 @@ const ProfileCard = (props) => {
   }, [inEditMode, displayName])
 
   const onClickSave = async () => {
-    const imageBase64only = newImage.split(',')[1];
+    let image;
+    if (newImage) {
+      image = newImage.split(',')[1];
+    }
     try {
-      const response = await updateUser(username, { displayName: updatedDisplayName, image: imageBase64only });
+      const response = await updateUser(username, { displayName: updatedDisplayName, image });
       updateUserOnPage(response.data);
       setInEditMode(false);
     } catch (err) { }
@@ -35,11 +38,13 @@ const ProfileCard = (props) => {
 
   const onChangeFile = (e) => {
     const file = e.target.files[0];
-    const fileReader = new FileReader();
-    fileReader.onloadend = () => {
-      setNewImage(fileReader.result);
+    if (file) {
+      const fileReader = new FileReader();
+      fileReader.onloadend = () => {
+        setNewImage(fileReader.result);
+      }
+      fileReader.readAsDataURL(file);
     }
-    fileReader.readAsDataURL(file);
   }
 
   const { t } = useTranslation();
@@ -47,10 +52,10 @@ const ProfileCard = (props) => {
   return (
     <div className="card text-center">
       <div className="card-header">
-        <ProfileImage className="rounded-circle shadow" 
-        image={image} tempiamge={newImage}
-        width="200px" height="200px"
-         alt={`${username} profile`} />
+        <ProfileImage className="rounded-circle shadow"
+          image={image} tempimage={newImage}
+          width="200px" height="200px"
+          alt={`${username} profile`} />
       </div>
       <div className="card-body">
         {!inEditMode ?
