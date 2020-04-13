@@ -14,6 +14,7 @@ const ProfileCard = (props) => {
   const [inEditMode, setInEditMode] = useState(false);
   const [updatedDisplayName, setUpdatedDisplayName] = useState();
   const [newImage, setNewImage] = useState();
+  const [errors, setErrors] = useState({});
   const { loggedUsername } = useSelector(store => ({
     loggedUsername: store.username
   }));
@@ -22,7 +23,22 @@ const ProfileCard = (props) => {
   useEffect(() => {
     setUpdatedDisplayName(displayName);
     setNewImage();
-  }, [inEditMode, displayName])
+    setErrors({})
+  }, [inEditMode, displayName]);
+
+  useEffect(() => {
+    setErrors(prevErrors => ({
+      ...prevErrors,
+      displayName: undefined
+    }));
+  }, [updatedDisplayName]);
+
+  useEffect(() => {
+    setErrors(prevErrors => ({
+      ...prevErrors,
+      image: undefined
+    }));
+  }, [newImage]);
 
   const onClickSave = async () => {
     let image;
@@ -33,8 +49,10 @@ const ProfileCard = (props) => {
       const response = await updateUser(username, { displayName: updatedDisplayName, image });
       updateUserOnPage(response.data);
       setInEditMode(false);
-    } catch (err) { }
-  }
+    } catch (err) {
+      setErrors(err.response.data.validationErrors);
+    }
+  };
 
   const onChangeFile = (e) => {
     const file = e.target.files[0];
@@ -45,9 +63,10 @@ const ProfileCard = (props) => {
       }
       fileReader.readAsDataURL(file);
     }
-  }
+  };
 
   const { t } = useTranslation();
+  const { displayName: displayNameError, image: imageError } = errors;
 
   return (
     <div className="card text-center">
@@ -69,8 +88,8 @@ const ProfileCard = (props) => {
           </>
           :
           <div>
-            <Input label={t("Change Display Name")} defaultValue={displayName} onChange={(e) => setUpdatedDisplayName(e.target.value)} />
-            <input type="file" onChange={onChangeFile} />
+            <Input label={t("Change Display Name")} error={displayNameError} defaultValue={displayName} onChange={(e) => setUpdatedDisplayName(e.target.value)} />
+            <Input error={imageError} type="file" onChange={onChangeFile} />
             <div>
               <ButtonWithProgress className="btn btn-primary d-inline-flex" onClick={onClickSave}
                 disabled={pendingApiCall} pendingApiCall={pendingApiCall}
