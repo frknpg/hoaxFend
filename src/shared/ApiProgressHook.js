@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export const useApiProgress = (apiMethod, apiPath) => {
+export const useApiProgress = (apiMethod, apiPath, strictPath) => {
   const [pendingApiCall, setPendingApiCall] = useState(false);
 
   useEffect(() => {
     let requestInterceptor, responseInterceptor;
 
     const updateApiCallFor = (method, url, pendingApiCall) => {
-      if (method === apiMethod && url.startsWith(apiPath)) {
+      if(method !== apiMethod) {
+        return;
+      }
+      if(strictPath && url === apiPath) {
+        setPendingApiCall(pendingApiCall);
+      } else if (!strictPath && url.startsWith(apiPath)) {
         setPendingApiCall(pendingApiCall);
       }
     }
@@ -40,7 +45,7 @@ export const useApiProgress = (apiMethod, apiPath) => {
     return function unmount() {
       unregisterInterceptors();
     }
-  }, [apiMethod, apiPath]);
+  }, [apiMethod, apiPath, strictPath]);
 
   return pendingApiCall;
 };
