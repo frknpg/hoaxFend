@@ -28,3 +28,8 @@ export const signupHandler = (user) => {
 		return response;
 	}
 };
+
+export const updateSuccess = ({ displayName, image }) => ({
+	type: actions.UPDATE_SUCCESS,
+	data: { displayName, image }
+});

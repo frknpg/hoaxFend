@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import ProfileImage from './ProfileImage';
 import { useTranslation } from 'react-i18next';
 import Input from './Input';
 import { updateUser } from '../api/apiCalls';
 import { useApiProgress } from '../shared/ApiProgressHook';
 import ButtonWithProgress from './ButtonWithProgress';
+import { updateSuccess } from '../redux/authActions';
 
 const ProfileCard = (props) => {
 
@@ -19,6 +20,8 @@ const ProfileCard = (props) => {
     loggedUsername: store.username
   }));
   const pendingApiCall = useApiProgress('put', '/api/1.0/users/' + username);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setUpdatedDisplayName(displayName);
@@ -49,6 +52,7 @@ const ProfileCard = (props) => {
       const response = await updateUser(username, { displayName: updatedDisplayName, image });
       updateUserOnPage(response.data);
       setInEditMode(false);
+      dispatch(updateSuccess(response.data));
     } catch (err) {
       setErrors(err.response.data.validationErrors);
     }

@@ -4,7 +4,7 @@ const defaultState = {
 	isLoggedIn: false,
 	username: undefined,
 	displayName: undefined,
-	img: undefined,
+	image: undefined,
 	password: undefined
 }
 
@@ -18,6 +18,11 @@ const authReducer = (state = { ...defaultState }, action) => {
 			...state,
 			...action.authState,
 			isLoggedIn: true
+		};
+	} else if(action.type === actions.UPDATE_SUCCESS) {
+		return {
+			...state,
+			...action.data
 		};
 	}
 	return state;
