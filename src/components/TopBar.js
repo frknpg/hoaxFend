@@ -23,7 +23,7 @@ const TopBar = (props) => {
   }, [isLoggedIn]);
 
   const menuClickTracker = (e) => {
-    if (menuArea.current === null || !menuArea.current.contains(e.target)) {
+    if (menuArea === null || menuArea.current === null || (menuArea.current && !menuArea.current.contains(e.target))) {
       setMenuVisible(false);
     }
   };
