@@ -25,7 +25,8 @@ i18n.use(initReactI18next).init({
         'Change Display Name': 'Change Display Name',
         'My Profile': 'My Profile',
         'There are no hoaxes': 'There are no hoaxes',
-        'Load old hoaxes': 'Load old hoaxes'
+        'Load old hoaxes': 'Load old hoaxes',
+        'There are new hoaxes': 'There are new hoaxes'
       }
     },
     tr: {
@@ -49,7 +50,8 @@ i18n.use(initReactI18next).init({
         'Change Display Name': 'Görünür İsminizi Değiştirin',
         'My Profile': 'Profilim',
         'There are no hoaxes': 'Hiç hoax yok',
-        'Load old hoaxes': 'Geçmiş hoaxları getir'
+        'Load old hoaxes': 'Geçmiş hoaxları getir',
+        'There are new hoaxes': 'Yeni hoaxları getir'
       }
     }
   },

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getHoaxes, getOldHoaxes, getNewHoaxCount } from '../api/apiCalls';
+import { getHoaxes, getOldHoaxes, getNewHoaxCount, getNewHoaxes } from '../api/apiCalls';
 import { useApiProgress } from '../shared/ApiProgressHook';
 import { useTranslation } from 'react-i18next';
 import HoaxView from './HoaxView';
@@ -10,6 +10,7 @@ const HoaxFeed = () => {
 
   const [hoaxPage, setHoaxPage] = useState({ content: [], last: true, number: 0 });
   const [loadOldHoaxesProgress, setLoadOldHoaxesProgress] = useState(false);
+  const [loadNewHoaxesProgress, setLoadNewHoaxesProgress] = useState(false);
   const [newHoaxCount, setNewHoaxCount] = useState(0);
 
   const { username } = useParams();
@@ -44,9 +45,7 @@ const HoaxFeed = () => {
       }
     };
 
-    let looper = setInterval(() => {
-      getCount();
-    }, 2500);
+    let looper = setInterval(getCount, 3000);
 
     return () => {
       clearInterval(looper)
@@ -70,6 +69,22 @@ const HoaxFeed = () => {
     setLoadOldHoaxesProgress(false);
   };
 
+  const loadNewHoaxes = async () => {
+    const lastHoaxId = hoaxPage.content[0].id;
+    setLoadNewHoaxesProgress(true);
+    try {
+      const response = await getNewHoaxes(username, lastHoaxId);
+      setHoaxPage(prev => ({
+        ...response.data,
+        content: [...response.data, ...prev.content]
+      }));
+      setNewHoaxCount(0);
+    } catch (error) {
+
+    }
+    setLoadNewHoaxesProgress(false);
+  };
+
   const { content, last } = hoaxPage;
 
   if (content.length === 0) {
@@ -87,10 +102,10 @@ const HoaxFeed = () => {
       {newHoaxCount > 0 &&
         <div
           className="alert alert-secondary text-center"
-          onClick={() => !loadOldHoaxesProgress && loadOldHoaxes()}
-          style={{ cursor: loadOldHoaxesProgress ? 'not-allowed' : 'pointer' }}
+          onClick={() => !loadNewHoaxesProgress && loadNewHoaxes()}
+          style={{ cursor: loadNewHoaxesProgress ? 'not-allowed' : 'pointer' }}
         >
-          {loadOldHoaxesProgress ?
+          {loadNewHoaxesProgress ?
             <Spinner />
             :
             t('There are new hoaxes')
