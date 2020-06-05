@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getHoaxes, getOldHoaxes } from '../api/apiCalls';
+import { getHoaxes, getOldHoaxes, getNewHoaxCount } from '../api/apiCalls';
 import { useApiProgress } from '../shared/ApiProgressHook';
 import { useTranslation } from 'react-i18next';
 import HoaxView from './HoaxView';
@@ -10,6 +10,7 @@ const HoaxFeed = () => {
 
   const [hoaxPage, setHoaxPage] = useState({ content: [], last: true, number: 0 });
   const [loadOldHoaxesProgress, setLoadOldHoaxesProgress] = useState(false);
+  const [newHoaxCount, setNewHoaxCount] = useState(0);
 
   const { username } = useParams();
   const { t } = useTranslation();
@@ -32,6 +33,25 @@ const HoaxFeed = () => {
 
     loadHoaxes();
   }, [username]);
+
+
+  useEffect(() => {
+    const getCount = async () => {
+      if (hoaxPage.content.length) {
+        const id = hoaxPage.content[0].id;
+        const response = await getNewHoaxCount(username, id);
+        setNewHoaxCount(response.data.count);
+      }
+    };
+
+    let looper = setInterval(() => {
+      getCount();
+    }, 2500);
+
+    return () => {
+      clearInterval(looper)
+    };
+  }, [hoaxPage.content, username]);
 
 
   const loadOldHoaxes = async () => {
@@ -64,6 +84,19 @@ const HoaxFeed = () => {
 
   return (
     <div>
+      {newHoaxCount > 0 &&
+        <div
+          className="alert alert-secondary text-center"
+          onClick={() => !loadOldHoaxesProgress && loadOldHoaxes()}
+          style={{ cursor: loadOldHoaxesProgress ? 'not-allowed' : 'pointer' }}
+        >
+          {loadOldHoaxesProgress ?
+            <Spinner />
+            :
+            t('There are new hoaxes')
+          }
+        </div>
+      }
       {content.map(hoax => (
         <HoaxView key={hoax.id} hoax={hoax} />
       ))}
