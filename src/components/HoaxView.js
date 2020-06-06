@@ -29,7 +29,11 @@ const HoaxView = ({ hoax }) => {
       </div>
       {fileAttachment && (
         <div className="pl-5">
-          <img className="img-fluid" src={'images/' + fileAttachment.name} alt={content} />
+          {fileAttachment.fileType.startsWith('image') ?
+            <img className="img-fluid" src={'images/attachments/' + fileAttachment.name} alt={content} />
+            :
+            <strong>Hoax has attachment </strong>
+          }
         </div>
       )}
     </div>
