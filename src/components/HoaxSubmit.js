@@ -14,6 +14,8 @@ const HoaxSubmit = () => {
   const [errors, setErrors] = useState({});
 
   const [newImage, setNewImage] = useState();
+  const [attachmentId, setAttachmentId] = useState();
+
 
   const [focused, setFocused] = useState(false);
   const { image } = useSelector(store => store);
@@ -27,6 +29,7 @@ const HoaxSubmit = () => {
       setHoax('');
       setErrors({});
       setNewImage();
+      setAttachmentId();
     }
   }, [focused]);
 
@@ -35,7 +38,7 @@ const HoaxSubmit = () => {
   }, [hoax]);
 
   const handleClickHoaxify = async () => {
-    const body = { content: hoax };
+    const body = { content: hoax, attachmentId };
     setErrors({});
     try {
       await postHoax(body);
@@ -62,7 +65,12 @@ const HoaxSubmit = () => {
   const uploadFile = async (file) => {
     const attachment = new FormData();
     attachment.append('file', file);
-    await postHoaxAttachment(attachment);
+    try {
+      const response = await postHoaxAttachment(attachment);
+      setAttachmentId(response.data.id);
+    } catch (error) {
+      
+    }
   };
 
   const { content } = errors;
