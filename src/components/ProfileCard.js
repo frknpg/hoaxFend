@@ -3,10 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import ProfileImage from './ProfileImage';
 import { useTranslation } from 'react-i18next';
 import Input from './Input';
-import { updateUser } from '../api/apiCalls';
+import { updateUser, deleteUser } from '../api/apiCalls';
 import { useApiProgress } from '../shared/ApiProgressHook';
 import ButtonWithProgress from './ButtonWithProgress';
-import { updateSuccess } from '../redux/authActions';
+import { updateSuccess, onLogout } from '../redux/authActions';
+import Modal from './Modal';
+import { useHistory } from 'react-router-dom';
 
 const ProfileCard = (props) => {
 
@@ -16,12 +18,18 @@ const ProfileCard = (props) => {
   const [updatedDisplayName, setUpdatedDisplayName] = useState();
   const [newImage, setNewImage] = useState();
   const [errors, setErrors] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
+
   const { loggedUsername } = useSelector(store => ({
     loggedUsername: store.username
   }));
+
   const pendingApiCall = useApiProgress('put', '/api/1.0/users/' + username);
+  const pendingDelete = useApiProgress('delete', '/api/1.0/users/' + username, true);
 
   const dispatch = useDispatch();
+
+  const history = useHistory();
 
   useEffect(() => {
     setUpdatedDisplayName(displayName);
@@ -69,6 +77,16 @@ const ProfileCard = (props) => {
     }
   };
 
+  const handleDeleteUser = async () => {
+    try {
+      await deleteUser(username);
+      dispatch(onLogout());
+      history.push('/');
+    } catch (error) {
+    }
+    setModalVisible(false);
+  };
+
   const { t } = useTranslation();
   const { displayName: displayNameError, image: imageError } = errors;
 
@@ -85,9 +103,17 @@ const ProfileCard = (props) => {
           <>
             <h3>{displayName}@{username}</h3>
             {loggedUsername === username &&
-              <button className="btn btn-success d-inline-flex" onClick={() => setInEditMode(true)} >
-                <i className="material-icons">edit</i> {t('Edit')}
-              </button>
+              <>
+                <button className="btn btn-success d-inline-flex" onClick={() => setInEditMode(true)} >
+                  <i className="material-icons">edit</i> {t('Edit')}
+                </button>
+                <div className="pt-2">
+                  <ButtonWithProgress className="btn btn-danger d-inline-flex" onClick={() => setModalVisible(true)}
+                    disabled={pendingDelete} pendingApiCall={pendingDelete}
+                    text={<><i className="material-icons">directions_run</i> {t('Delete My Account')}</>}
+                  />
+                </div>
+              </>
             }
           </>
           :
@@ -106,6 +132,15 @@ const ProfileCard = (props) => {
           </div>
         }
       </div>
+      {modalVisible && <Modal
+        title={t('Delete My Account')}
+        message={
+          <div><strong>{t('Are you sure to delete your account?')}</strong></div>
+        }
+        handleClose={() => setModalVisible(false)}
+        handleOk={handleDeleteUser}
+        inProgress={pendingDelete}
+      />}
     </div>
   );
 };

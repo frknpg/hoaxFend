@@ -37,8 +37,8 @@ const HoaxView = ({ hoax, handleDeleteHoax }) => {
         <div className="d-flex">
           <ProfileImage image={image} width="32" height="32" className="rounded-circle m-1" />
           <div className="flex-fill m-auto pl-2">
-            <Link to={`/user/${loggedUsername}`} className="text-dark">
-              <h6 className="d-inline">{displayName}@{loggedUsername}</h6>
+            <Link to={`/user/${username}`} className="text-dark">
+              <h6 className="d-inline">{displayName}@{username}</h6>
               <span> - </span>
               <small>{formatted}</small>
             </Link>
