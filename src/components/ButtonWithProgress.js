@@ -1,7 +1,6 @@
 import React from 'react';
 
-const ButtonWithProgress = (props) => {
-  const { disabled, pendingApiCall, onClick, text, className } = props;
+const ButtonWithProgress = ({ disabled, pendingApiCall, onClick, text, className }) => {
 
   return (
     <button
